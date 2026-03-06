@@ -14,7 +14,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
   <header class="site-header transparent theme-dark">
@@ -69,9 +68,6 @@
           <input type="text" name="subject" placeholder="Subject">
           <textarea name="message" rows="6" placeholder="Message *" required></textarea>
           
-          <!-- Google reCAPTCHA -->
-          <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY" style="margin-bottom: 16px;"></div>
-
           <button class="btn" type="submit" id="submitBtn">Submit</button>
         </form>
       </div>
@@ -116,7 +112,6 @@
           messageDiv.style.color = '#155724';
           messageDiv.innerText = data.message;
           form.reset();
-          if (window.grecaptcha) grecaptcha.reset();
         } else {
           messageDiv.style.backgroundColor = '#f8d7da';
           messageDiv.style.color = '#721c24';

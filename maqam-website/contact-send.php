@@ -5,11 +5,11 @@
  */
 
 // Configuration - PLACEHOLDERS TO BE FILLED
-define('RECAPTCHA_SECRET_KEY', 'YOUR_SECRET_KEY');
+// define('RECAPTCHA_SECRET_KEY', '6LeVLYEsAAAAAPRRUxwE_ftNUY_9bt9ggOAPWKti');
 define('SMTP_HOST', 'mail.maqamalriyadh.com');
 define('SMTP_USERNAME', 'info@maqamalriyadh.com');
-define('SMTP_PASSWORD', 'YOUR_EMAIL_PASSWORD');
-define('SMTP_PORT', 587);
+define('SMTP_PASSWORD', 'maqamalriyadh@2026');
+define('SMTP_PORT', 465);
 define('SMTP_SECURE', 'tls'); // 'tls' or 'ssl'
 
 // Rate Limiting Configuration
@@ -80,7 +80,7 @@ $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 $subject = filter_input(INPUT_POST, 'subject', FILTER_SANITIZE_STRING) ?: 'New Contact Inquiry';
 $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
-$recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
+// $recaptcha_response = $_POST['g-recaptcha-response'] ?? '';
 
 if (!$name || !$email || !$message) {
     echo json_encode(['success' => false, 'message' => 'Please fill in all required fields.']);
@@ -92,34 +92,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-// 4. reCAPTCHA Verification
-if (empty($recaptcha_response)) {
-    echo json_encode(['success' => false, 'message' => 'Please complete the CAPTCHA.']);
-    exit;
-}
 
-$verify_url = 'https://www.google.com/recaptcha/api/siteverify';
-$verify_data = [
-    'secret' => RECAPTCHA_SECRET_KEY,
-    'response' => $recaptcha_response,
-    'remoteip' => $ip
-];
-
-$options = [
-    'http' => [
-        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-        'method'  => 'POST',
-        'content' => http_build_query($verify_data)
-    ]
-];
-$context  = stream_context_create($options);
-$verify_result = file_get_contents($verify_url, false, $context);
-$captcha_success = json_decode($verify_result);
-
-if (!$captcha_success->success) {
-    echo json_encode(['success' => false, 'message' => 'reCAPTCHA verification failed. Please try again.']);
-    exit;
-}
 
 
 // 5. PHPMailer Setup & Sending
